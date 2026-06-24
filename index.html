@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Teacher Summer Restoration Assessment</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --cream:#faf8f4;
+  --warm-white:#fffdf9;
+  --sage:#8a9e8c;
+  --sage-light:#e8eeea;
+  --sage-mid:#c4d4c6;
+  --clay:#c4876a;
+  --clay-light:#f5ede7;
+  --ink:#2c2c2c;
+  --ink-mid:#5a5a5a;
+  --ink-light:#9a9a9a;
+  --border:#e8e4de;
+}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  min-height:100vh;
+  line-height:1.6;
+}
+
+.screen{display:none}
+.screen.active{display:block}
+
+/* ── WELCOME ── */
+#welcome{
+  min-height:100vh;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:48px 24px;
+  text-align:center;
+}
+#welcome.active{display:flex}
+
+.brand{
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--sage);
+  margin-bottom:36px;
+}
+
+.welcome-title{
+  font-family:'Lora',serif;
+  font-size:clamp(26px,4vw,40px);
+  font-weight:500;
+  color:var(--ink);
+  line-height:1.2;
+  max-width:580px;
+  margin-bottom:10px;
+}
+
+.welcome-italic{
+  font-style:italic;
+  color:var(--sage);
+}
+
+.welcome-sub{
+  font-size:15px;
+  color:var(--ink-mid);
+  max-width:480px;
+  line-height:1.8;
+  margin:0 auto 40px;
+}
+
+.divider{
+  width:40px;
+  height:1px;
+  background:var(--sage-mid);
+  margin:28px auto;
+}
+
+.meta-row{
+  display:flex;
+  justify-content:center;
+  gap:28px;
+  flex-wrap:wrap;
+  margin-bottom:40px;
+}
+
+.meta-item{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:12px;
+  color:var(--ink-light);
+  letter-spacing:.5px;
+}
+
+.meta-dot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--sage-mid);
+}
+
+.btn-primary{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:var(--ink);
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:12px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  padding:16px 36px;
+  border:none;
+  border-radius:2px;
+  cursor:pointer;
+  transition:opacity .2s;
+}
+.btn-primary:hover{opacity:.85}
+
+.welcome-note{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:13px;
+  color:var(--ink-light);
+  margin-top:20px;
+}
+
+/* ── QUIZ ── */
+#quiz{
+  min-height:100vh;
+  padding:0;
+}
+
+.quiz-header{
+  background:var(--warm-white);
+  border-bottom:1px solid var(--border);
+  padding:16px 24px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.quiz-header-inner{
+  max-width:640px;
+  margin:0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.quiz-brand{
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:var(--sage);
+}
+
+.quiz-counter{
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  color:var(--ink-light);
+  letter-spacing:.5px;
+}
+
+.progress-wrap{
+  height:3px;
+  background:var(--border);
+  margin-top:12px;
+}
+
+.progress-fill{
+  height:100%;
+  background:var(--sage);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+}
+
+.quiz-body{
+  max-width:640px;
+  margin:0 auto;
+  padding:52px 24px 80px;
+}
+
+.section-label{
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--clay);
+  margin-bottom:10px;
+}
+
+.question-text{
+  font-family:'Lora',serif;
+  font-size:clamp(18px,2.5vw,22px);
+  font-weight:500;
+  color:var(--ink);
+  line-height:1.5;
+  margin-bottom:40px;
+  max-width:540px;
+}
+
+.scale-wrap{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.scale-option{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:14px 18px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  cursor:pointer;
+  transition:all .18s;
+  background:var(--warm-white);
+}
+.scale-option:hover{border-color:var(--sage-mid);background:var(--sage-light)}
+.scale-option.selected{border-color:var(--sage);background:var(--sage-light)}
+
+.scale-num{
+  width:30px;height:30px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:500;
+  color:var(--ink-mid);
+  flex-shrink:0;
+  transition:all .18s;
+}
+.scale-option.selected .scale-num{
+  background:var(--sage);
+  border-color:var(--sage);
+  color:#fff;
+}
+
+.scale-label{font-size:14px;color:var(--ink-mid)}
+.scale-option.selected .scale-label{color:var(--ink);font-weight:500}
+
+.quiz-nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:40px;
+  padding-top:32px;
+  border-top:1px solid var(--border);
+}
+
+.btn-ghost{
+  font-family:'Inter',sans-serif;
+  font-size:12px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--ink-mid);
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:10px 0;
+}
+.btn-ghost:hover{color:var(--ink)}
+.btn-ghost:disabled{color:var(--border);cursor:default}
+
+
+/* ── RESULTS ── */
+#results{
+  min-height:100vh;
+  padding-bottom:80px;
+}
+
+.results-hero{
+  background:linear-gradient(160deg, #f0ece6 0%, #e8eeea 100%);
+  border-bottom:1px solid var(--border);
+  padding:60px 24px 52px;
+  text-align:center;
+}
+
+.results-eyebrow{
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--sage);
+  margin-bottom:18px;
+}
+
+.results-title{
+  font-family:'Lora',serif;
+  font-size:clamp(24px,4vw,38px);
+  font-weight:500;
+  color:var(--ink);
+  line-height:1.2;
+  margin-bottom:6px;
+}
+
+.results-sub{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:16px;
+  color:var(--ink-mid);
+  margin-bottom:40px;
+}
+
+.score-pills{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  max-width:600px;
+  margin:0 auto;
+}
+
+.pill{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 16px;
+  border-radius:100px;
+  font-size:12px;
+  font-weight:500;
+  background:var(--warm-white);
+  border:1px solid var(--border);
+  color:var(--ink-mid);
+}
+.pill.primary{background:var(--clay);border-color:var(--clay);color:#fff}
+.pill.secondary{background:var(--sage);border-color:var(--sage);color:#fff}
+.pill.strength{background:var(--ink);border-color:var(--ink);color:#fff}
+
+.results-body{
+  max-width:640px;
+  margin:0 auto;
+  padding:52px 24px 0;
+}
+
+.result-section{
+  margin-bottom:48px;
+}
+
+.result-tag{
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--ink-light);
+  margin-bottom:6px;
+}
+
+.result-category{
+  font-family:'Lora',serif;
+  font-size:clamp(18px,2.5vw,22px);
+  font-weight:500;
+  color:var(--ink);
+  margin-bottom:16px;
+}
+
+.result-copy{
+  font-size:15px;
+  color:var(--ink-mid);
+  line-height:1.85;
+  margin-bottom:0;
+}
+
+.practices-block{
+  background:var(--sage-light);
+  border-radius:8px;
+  padding:24px 26px;
+  margin-top:20px;
+}
+
+.practices-title{
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--sage);
+  margin-bottom:14px;
+}
+
+.practices-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.practices-list li{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  font-size:14px;
+  color:var(--ink-mid);
+  line-height:1.6;
+}
+
+.practice-dot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--sage);
+  flex-shrink:0;
+  margin-top:7px;
+}
+
+.reflection-block{
+  border-left:2px solid var(--clay-light);
+  padding:18px 22px;
+  margin-top:20px;
+  background:var(--clay-light);
+  border-radius:0 8px 8px 0;
+}
+
+.reflection-label{
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--clay);
+  margin-bottom:8px;
+}
+
+.reflection-q{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:16px;
+  color:var(--ink);
+  line-height:1.6;
+}
+
+.strength-block{
+  background:var(--warm-white);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:28px 28px;
+}
+
+.score-bar-wrap{
+  margin-top:32px;
+  margin-bottom:48px;
+}
+
+.score-bar-item{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+
+.score-bar-label{
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--ink-mid);
+  width:90px;
+  flex-shrink:0;
+}
+
+.score-bar-track{
+  flex:1;
+  height:5px;
+  background:var(--border);
+  border-radius:3px;
+  overflow:hidden;
+}
+
+.score-bar-fill{
+  height:100%;
+  border-radius:3px;
+  background:var(--sage);
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+.score-bar-fill.primary{background:var(--clay)}
+.score-bar-fill.strength{background:var(--sage)}
+
+.score-bar-num{
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  font-weight:600;
+  color:var(--ink-mid);
+  width:28px;
+  text-align:right;
+  flex-shrink:0;
+}
+
+.cta-block{
+  background:linear-gradient(160deg, #2c2c2c 0%, #3d3d3d 100%);
+  border-radius:10px;
+  padding:48px 36px;
+  text-align:center;
+  margin-top:56px;
+}
+
+.cta-eyebrow{
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+  margin-bottom:16px;
+}
+
+.cta-title{
+  font-family:'Lora',serif;
+  font-size:clamp(18px,3vw,24px);
+  font-weight:500;
+  color:#fff;
+  line-height:1.3;
+  margin-bottom:12px;
+}
+
+.cta-sub{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:14px;
+  color:rgba(255,255,255,.5);
+  line-height:1.7;
+  margin-bottom:28px;
+  max-width:360px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.btn-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:var(--sage);
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:12px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  padding:16px 32px;
+  border-radius:2px;
+  text-decoration:none;
+  transition:opacity .2s;
+}
+.btn-cta:hover{opacity:.88}
+
+.footer{
+  text-align:center;
+  padding:36px 24px;
+  border-top:1px solid var(--border);
+  margin-top:48px;
+}
+
+.footer-brand{
+  font-family:'Lora',serif;
+  font-weight:500;
+  font-size:14px;
+  color:var(--ink-mid);
+  margin-bottom:6px;
+}
+
+.footer-domain{
+  font-family:'Inter',sans-serif;
+  font-size:11px;
+  letter-spacing:1px;
+  color:var(--ink-light);
+}
+
+/* slide transition */
+.quiz-slide{
+  opacity:1;
+  transform:translateX(0);
+  transition:opacity .22s ease, transform .22s ease;
+}
+.quiz-slide.exit{
+  opacity:0;
+  transform:translateX(24px);
+}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<section id="welcome" class="screen active">
+  <p class="brand">The Visionary Classroom</p>
+  <h1 class="welcome-title">Discover What Your Mind, Heart, and Spirit Need Most <span class="welcome-italic">This Summer</span></h1>
+  <div class="divider"></div>
+  <p class="welcome-sub">The end of the school year often leaves us carrying more than we realize. Fatigue. Questions. Unfinished stories. This 5-minute assessment will help you discover what needs restoration most so you can move into summer with greater clarity, intention, and care.</p>
+  <div class="meta-row">
+    <div class="meta-item"><div class="meta-dot"></div>25 questions</div>
+    <div class="meta-item"><div class="meta-dot"></div>5 categories</div>
+    <div class="meta-item"><div class="meta-dot"></div>~5 minutes</div>
+  </div>
+  <button class="btn-primary" onclick="startQuiz()">Begin Assessment →</button>
+  <p class="welcome-note">For the teacher who is ready to actually rest.</p>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="screen">
+  <div class="quiz-header">
+    <div class="quiz-header-inner">
+      <span class="quiz-brand">The Visionary Classroom</span>
+      <span class="quiz-counter" id="counter">1 / 25</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progressBar" style="width:4%"></div>
+    </div>
+  </div>
+  <div class="quiz-body">
+    <div class="quiz-slide" id="questionSlide">
+      <p class="section-label" id="sectionLabel"></p>
+      <h2 class="question-text" id="questionText"></h2>
+      <div class="scale-wrap" id="scaleWrap"></div>
+      <div class="quiz-nav">
+        <button class="btn-ghost" id="backBtn" onclick="goBack()">← Back</button>
+        <button class="btn-ghost" id="nextBtn" onclick="goNext()" disabled>Next →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- RESULTS -->
+<section id="results" class="screen">
+  <div class="results-hero">
+    <p class="results-eyebrow">The Visionary Classroom · Summer Restoration Assessment</p>
+    <h2 class="results-title">Your Summer Restoration Map</h2>
+    <p class="results-sub" id="resultsName">Here is what your answers revealed.</p>
+    <div class="score-pills" id="scorePills"></div>
+  </div>
+  <div class="results-body">
+    <div class="score-bar-wrap" id="scoreBars"></div>
+    <div id="primaryResult" class="result-section"></div>
+    <div id="secondaryResult" class="result-section"></div>
+    <div id="strengthResult" class="result-section"></div>
+    <div class="cta-block">
+      <p class="cta-eyebrow">Your Summer Restoration Map Is Just the Beginning</p>
+      <h3 class="cta-title">Continue the reflection on What Teaching is Teaching Me</h3>
+      <p class="cta-sub">For teachers exploring the questions, lessons, and unfinished stories that teaching leaves with us.</p>
+      <a href="https://kendrawalker1.substack.com/" target="_blank" class="btn-cta">Subscribe on Substack →</a>
+    </div>
+    <div class="footer">
+      <p class="footer-brand">The Visionary Classroom</p>
+      <p class="footer-domain">thevisionaryclassroom.com</p>
+    </div>
+  </div>
+</section>
+
+<script>
+const LABELS = ["Strongly Disagree","Disagree","Neutral","Agree","Strongly Agree"];
+
+const QUESTIONS = [
+  {cat:"Rest",    text:"I wake up feeling rested most mornings."},
+  {cat:"Rest",    text:"I have permission to slow down this summer."},
+  {cat:"Rest",    text:"My body feels recovered from the demands of the school year."},
+  {cat:"Rest",    text:"I don't feel guilty when I'm not being productive."},
+  {cat:"Rest",    text:"My schedule includes time for rest and recovery."},
+  {cat:"Reflection",text:"I've taken time to think about what this year taught me."},
+  {cat:"Reflection",text:"I understand what I'm carrying forward from this school year."},
+  {cat:"Reflection",text:"I regularly pause to reflect rather than rush into the next thing."},
+  {cat:"Reflection",text:"I can identify moments from the year that changed me."},
+  {cat:"Reflection",text:"I feel emotionally settled as summer begins."},
+  {cat:"Curiosity",text:"There are books, ideas, or topics I'm excited to explore."},
+  {cat:"Curiosity",text:"I feel energized by learning something new."},
+  {cat:"Curiosity",text:"I make time for intellectual curiosity."},
+  {cat:"Curiosity",text:"I feel inspired by possibilities rather than weighed down by obligations."},
+  {cat:"Curiosity",text:"I have interests outside of my professional role."},
+  {cat:"Connection",text:"I feel connected to the people who matter most."},
+  {cat:"Connection",text:"I regularly make time for meaningful conversations."},
+  {cat:"Connection",text:"I feel supported by my community."},
+  {cat:"Connection",text:"I am intentionally nurturing important relationships."},
+  {cat:"Connection",text:"I have people I can fully be myself around."},
+  {cat:"Creativity",text:"I have ideas I want to explore this summer."},
+  {cat:"Creativity",text:"I make time to write, create, build, or express myself."},
+  {cat:"Creativity",text:"I feel inspired more often than depleted."},
+  {cat:"Creativity",text:"I trust my own ideas and perspectives."},
+  {cat:"Creativity",text:"I feel connected to my creative energy."},
+];
+
+const COPY = {
+  Rest:{
+    body:"Your summer may be asking you to recover before you produce. Rest is not a reward for doing enough. It is part of becoming whole again.",
+    reflection:"What would change if rest became a priority instead of a reward?",
+    practices:["Protect one unscheduled morning each week.","Create a gentle sleep or morning rhythm.","Remove one unnecessary obligation."]
+  },
+  Reflection:{
+    body:"Your summer may be asking for space to process what the school year taught you. Before moving on, there may be wisdom waiting in what you just lived.",
+    reflection:"What lesson from this school year deserves more attention before you move on?",
+    practices:["Journal once a week about what teaching taught you.","Take a quiet walk without input.","Write a letter to your future August self."]
+  },
+  Curiosity:{
+    body:"Your summer may be asking you to follow wonder again. You may need books, ideas, questions, and fresh perspectives that remind you you are more than your role.",
+    reflection:"What are you curious about that has nothing to do with school?",
+    practices:["Choose one book purely for pleasure.","Explore a topic with no pressure to use it professionally.","Visit a museum, bookstore, garden, or new place."]
+  },
+  Connection:{
+    body:"Your summer may be asking you to return to the people who make you feel most like yourself. Restoration often happens through meaningful presence.",
+    reflection:"Who helps me feel more like myself?",
+    practices:["Schedule one meaningful conversation.","Reach out to someone you miss.","Create a simple summer ritual with someone you love."]
+  },
+  Creativity:{
+    body:"Your summer may be asking you to express what has been quietly forming inside you. Creativity is not another assignment. It is a way back to yourself.",
+    reflection:"What wants to be expressed, made, written, or explored?",
+    practices:["Start a small creative project.","Write without needing it to be useful.","Give yourself permission to make something imperfectly."]
+  }
+};
+
+const CAT_ORDER = ["Rest","Reflection","Curiosity","Connection","Creativity"];
+
+let current = 0;
+let answers = new Array(25).fill(null);
+
+function startQuiz(){
+  document.getElementById('welcome').classList.remove('active');
+  document.getElementById('quiz').classList.add('active');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  document.getElementById('sectionLabel').textContent = q.cat;
+  document.getElementById('questionText').textContent = q.text;
+  document.getElementById('counter').textContent = `${current+1} / 25`;
+  const pct = ((current) / 25) * 100;
+  document.getElementById('progressBar').style.width = Math.max(pct, 4) + '%';
+  document.getElementById('backBtn').disabled = current === 0;
+
+  const wrap = document.getElementById('scaleWrap');
+  wrap.innerHTML = '';
+  LABELS.forEach((lbl, i) => {
+    const val = i + 1;
+    const div = document.createElement('div');
+    div.className = 'scale-option' + (answers[current] === val ? ' selected' : '');
+    div.innerHTML = `<div class="scale-num">${val}</div><span class="scale-label">${lbl}</span>`;
+    div.onclick = () => selectAnswer(val);
+    wrap.appendChild(div);
+  });
+
+  document.getElementById('nextBtn').disabled = answers[current] === null;
+}
+
+function selectAnswer(val){
+  answers[current] = val;
+  document.querySelectorAll('.scale-option').forEach((el, i) => {
+    el.classList.toggle('selected', i + 1 === val);
+  });
+  document.getElementById('nextBtn').disabled = false;
+  // auto-advance after brief pause
+  setTimeout(() => {
+    if(answers[current] !== null) goNext();
+  }, 420);
+}
+
+function goNext(){
+  if(answers[current] === null) return;
+  if(current < 24){
+    const slide = document.getElementById('questionSlide');
+    slide.classList.add('exit');
+    setTimeout(() => {
+      current++;
+      slide.classList.remove('exit');
+      renderQuestion();
+    }, 220);
+  } else {
+    document.getElementById('quiz').classList.remove('active');
+    showResults();
+  }
+}
+
+function goBack(){
+  if(current === 0) return;
+  const slide = document.getElementById('questionSlide');
+  slide.classList.add('exit');
+  setTimeout(() => {
+    current--;
+    slide.classList.remove('exit');
+    renderQuestion();
+  }, 220);
+}
+
+function calcScores(){
+  const scores = {};
+  CAT_ORDER.forEach(cat => scores[cat] = 0);
+  QUESTIONS.forEach((q, i) => { if(answers[i]) scores[q.cat] += answers[i]; });
+  return scores;
+}
+
+function showResults(){
+  document.getElementById('results').classList.add('active');
+
+  const scores = calcScores();
+  const sorted = [...CAT_ORDER].sort((a,b) => scores[a] - scores[b]);
+  const primary   = sorted[0];
+  const secondary = sorted[1];
+  const strengthCat = sorted[sorted.length - 1];
+
+  // Pills
+  const pillsEl = document.getElementById('scorePills');
+  pillsEl.innerHTML = `
+    <div class="pill primary">Primary Need: ${primary}</div>
+    <div class="pill secondary">Secondary Focus: ${secondary}</div>
+    <div class="pill strength">Strength: ${strengthCat}</div>
+  `;
+
+  // Score bars
+  const barsEl = document.getElementById('scoreBars');
+  barsEl.innerHTML = '<div style="font-family:\'Inter\',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-light);margin-bottom:16px;">Your Five Foundations</div>';
+  CAT_ORDER.forEach(cat => {
+    const pct = ((scores[cat] - 5) / 20) * 100;
+    let cls = cat === primary ? 'primary' : cat === strengthCat ? 'strength' : '';
+    barsEl.innerHTML += `
+      <div class="score-bar-item">
+        <span class="score-bar-label">${cat}</span>
+        <div class="score-bar-track"><div class="score-bar-fill ${cls}" style="width:0%" data-pct="${pct}"></div></div>
+        <span class="score-bar-num">${scores[cat]}</span>
+      </div>`;
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.score-bar-fill[data-pct]').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+  }, 200);
+
+  // Build result blocks
+  buildResultBlock('primaryResult', primary, 'Primary Focus', 'Where your restoration begins this summer.');
+  buildResultBlock('secondaryResult', secondary, 'Secondary Focus', 'A second thread worth tending.');
+  buildStrengthBlock(strengthCat, scores[strengthCat]);
+
+  window.scrollTo(0,0);
+}
+
+function buildResultBlock(elId, cat, tag, tagSub){
+  const c = COPY[cat];
+  const el = document.getElementById(elId);
+  el.innerHTML = `
+    <p class="result-tag">${tag}</p>
+    <h3 class="result-category">${cat}</h3>
+    <p class="result-copy">${c.body}</p>
+    <div class="practices-block">
+      <p class="practices-title">Three Practices to Try</p>
+      <ul class="practices-list">
+        ${c.practices.map(p => `<li><div class="practice-dot"></div>${p}</li>`).join('')}
+      </ul>
+    </div>
+    <div class="reflection-block">
+      <p class="reflection-label">A Question to Sit With</p>
+      <p class="reflection-q">${c.reflection}</p>
+    </div>
+    <div class="divider"></div>
+  `;
+}
+
+function buildStrengthBlock(cat, score){
+  const el = document.getElementById('strengthResult');
+  el.innerHTML = `
+    <p class="result-tag">Strength to Lean On</p>
+    <div class="strength-block">
+      <h3 class="result-category" style="margin-bottom:10px">${cat}</h3>
+      <p class="result-copy">This is where your energy is most alive right now. Let it support you as you do the deeper work of restoration elsewhere. You don't need to fix what is already working — you need to let it carry you.</p>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
